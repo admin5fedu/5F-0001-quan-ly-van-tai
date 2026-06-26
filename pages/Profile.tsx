@@ -1,0 +1,387 @@
+import React, { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Building2, Briefcase, Calendar, Camera, Key, Mail, Phone, Save, Shield, User as UserIcon, X } from 'lucide-react';
+import { toast } from 'sonner';
+
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
+import SingleImageInput from '../components/ui/SingleImageInput';
+import DashboardToolbar from '../components/shared/DashboardToolbar';
+import DetailField from '../components/shared/DetailField';
+import DetailFieldGrid from '../components/shared/DetailFieldGrid';
+import DetailSection from '../components/shared/DetailSection';
+import DetailToolbar from '../components/shared/DetailToolbar';
+import { useUpdateEmployee, useEmployees } from '../features/he-thong/nhan-vien/hooks/use-nhan-vien';
+import type { Employee } from '../features/he-thong/nhan-vien/core/types';
+import { employeeToFormValues } from '../features/he-thong/nhan-vien/utils/employee-to-form';
+import { canEditProfile } from '../lib/profile-permissions';
+import { txt } from '../lib/text';
+import { formatDate, getAvatarUrl } from '../lib/utils';
+import { useAuthStore } from '../store/useStore';
+import { getAuthService } from '../lib/supabase/auth';
+
+const Profile: React.FC = () => {
+  const { user, login } = useAuthStore();
+  const { data: employees = [] } = useEmployees();
+  const updateEmployeeMutation = useUpdateEmployee();
+
+  const currentEmployee = useMemo(
+    () => (user?.email ? employees.find((e) => e.email === user.email) ?? null : null),
+    [employees, user],
+  );
+
+  const displayData: Employee = useMemo(() => {
+    if (currentEmployee) return currentEmployee;
+    return {
+      id: '',
+      ho_va_ten: user?.full_name ?? '',
+      avatar: user?.avatar_url ?? null,
+      trang_thai: 'Đang làm việc',
+      id_phong_ban: null,
+      id_chuc_vu: null,
+      so_dien_thoai: null,
+      email: user?.email ?? '',
+      ten_dang_nhap: user?.email?.split('@')[0] ?? '',
+      tg_tao: user?.created_at,
+    };
+  }, [currentEmployee, user]);
+
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+
+  const handlePasswordSave = async () => {
+    if (!newPassword) {
+      toast.warning('Vui lòng nhập mật khẩu mới');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.warning('Mật khẩu phải từ 6 ký tự trở lên');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.warning('Mật khẩu xác nhận không khớp');
+      return;
+    }
+    try {
+      setIsUpdatingPassword(true);
+      const res = await getAuthService().updatePassword(newPassword);
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success(txt('nav.changePassword.success') || 'Đổi mật khẩu thành công.');
+        setPasswordModalOpen(false);
+        setNewPassword('');
+        setConfirmPassword('');
+      }
+    } catch (err: any) {
+      toast.error(err?.message || 'Có lỗi xảy ra khi đổi mật khẩu');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
+
+  const handleClosePasswordModal = () => {
+    setPasswordModalOpen(false);
+    setNewPassword('');
+    setConfirmPassword('');
+  };
+
+  const editable = canEditProfile(user);
+  const displayName = displayData.ho_va_ten || user?.full_name || '';
+  const displayEmail = displayData.email || user?.email || '';
+  const displayAvatar = displayData.avatar || user?.avatar_url || null;
+  const roleLabel = user?.role === 'admin' ? txt('nav.roleAdmin') : txt('page.profile.roleUser');
+  const emptyText = txt('page.profile.emptyField');
+
+  const handleAvatarSave = async () => {
+    if (!user || avatarPreview === null) return;
+    if (currentEmployee) {
+      try {
+        await updateEmployeeMutation.mutateAsync({
+          id: currentEmployee.id,
+          data: { ...employeeToFormValues(currentEmployee), avatar: avatarPreview },
+        });
+        login({ ...user, avatar_url: avatarPreview });
+        toast.success(txt('page.profile.avatarUpdateSuccess'));
+      } catch {
+        toast.error(txt('page.profile.userNotFound'));
+      }
+    } else {
+      login({ ...user, avatar_url: avatarPreview });
+      toast.success(txt('page.profile.avatarUpdateSuccess'));
+    }
+    setAvatarModalOpen(false);
+    setAvatarPreview(null);
+  };
+
+  const toolbarActions = useMemo(() => {
+    if (!editable) return [];
+    return [
+      {
+        label: txt('page.profile.changeAvatar'),
+        icon: <Camera />,
+        onClick: () => {
+          setAvatarPreview(displayAvatar);
+          setAvatarModalOpen(true);
+        },
+        variant: 'info' as const,
+      },
+      {
+        label: txt('page.profile.changePassword'),
+        icon: <Key />,
+        onClick: () => setPasswordModalOpen(true),
+        variant: 'secondary' as const,
+      },
+    ];
+  }, [editable, displayAvatar]);
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-muted-foreground">{txt('page.profile.userNotFound')}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col min-h-0">
+      <DashboardToolbar
+        leadingContent={
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <UserIcon className="h-4 w-4" />
+            </div>
+            <h1 className="text-sm font-semibold text-foreground truncate">{txt('page.profile.title')}</h1>
+          </div>
+        }
+      />
+
+      <div className="px-4 sm:px-6 space-y-4 sm:space-y-6 pb-10 pt-3 md:pt-4 max-w-full">
+        {!editable && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="rounded-xl border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-amber-800 dark:text-amber-200"
+            role="status"
+          >
+            {txt('page.profile.viewOnlyBanner')}
+          </motion.div>
+        )}
+
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-stretch lg:items-start w-full">
+          <motion.aside
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="w-full lg:w-72 lg:shrink-0 lg:sticky lg:top-6"
+          >
+            <div className="rounded-xl border border-border bg-card shadow-sm relative overflow-hidden">
+              <div className="h-16 sm:h-24 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent" aria-hidden="true" />
+              <div className="px-4 sm:px-6 -mt-8 sm:-mt-12">
+                <div className="flex items-end gap-3 sm:block sm:text-center">
+                  <div className="relative shrink-0 sm:inline-block">
+                    <img
+                      src={avatarPreview ?? displayAvatar ?? getAvatarUrl(displayName, 128)}
+                      alt={displayName ? txt('page.profile.avatarAlt', { name: displayName }) : txt('page.profile.avatarAltFallback')}
+                      className="w-16 h-16 sm:w-24 sm:h-24 rounded-full border-[3px] sm:border-4 border-card shadow-lg object-cover"
+                    />
+                    <span className="absolute bottom-0.5 right-0.5 sm:bottom-1 sm:right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-emerald-500 border-2 border-card rounded-full" aria-hidden="true" />
+                  </div>
+                  <div className="pb-1 sm:pb-0 sm:mt-3 min-w-0">
+                    <h3 className="font-bold text-base sm:text-lg text-foreground leading-tight truncate">{displayName}</h3>
+                    <span className="inline-block mt-1 sm:mt-1.5 bg-primary/10 text-primary px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                      {roleLabel}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-5">
+                <div className="grid grid-cols-2 sm:grid-cols-1 gap-2.5 sm:gap-3 text-xs sm:text-sm">
+                  <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground min-w-0">
+                    <Mail size={14} className="shrink-0" />
+                    <span className="truncate">{displayEmail || emptyText}</span>
+                  </div>
+                  {displayData.so_dien_thoai && (
+                    <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground">
+                      <Phone size={14} className="shrink-0" />
+                      <span className="truncate">{displayData.so_dien_thoai}</span>
+                    </div>
+                  )}
+                  {displayData.ten_phong_ban && (
+                    <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground">
+                      <Building2 size={14} className="shrink-0" />
+                      <span className="truncate">{displayData.ten_phong_ban}</span>
+                    </div>
+                  )}
+                  {displayData.ten_chuc_vu && (
+                    <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground">
+                      <Briefcase size={14} className="shrink-0" />
+                      <span className="truncate">{displayData.ten_chuc_vu}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground">
+                    <Shield size={14} className="shrink-0" />
+                    <span>{displayData.trang_thai}</span>
+                  </div>
+                </div>
+              </div>
+
+              {toolbarActions.length > 0 && (
+                <div className="border-t border-border">
+                  <DetailToolbar actions={toolbarActions} columns={2} className="py-3 sm:py-4" />
+                </div>
+              )}
+            </div>
+          </motion.aside>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="w-full min-w-0 flex-1 space-y-4 sm:space-y-5"
+          >
+            <DetailSection title="Thông tin chính" icon={<UserIcon size={14} />} variant="primary">
+              <DetailFieldGrid cols={3}>
+                <DetailField label="Họ và tên" value={displayData.ho_va_ten} icon={<UserIcon size={12} />} emptyText={emptyText} />
+                <DetailField label="Tên đăng nhập" value={displayData.ten_dang_nhap} icon={<Key size={12} />} emptyText={emptyText} />
+                <DetailField label="Trạng thái" value={displayData.trang_thai} icon={<Shield size={12} />} emptyText={emptyText} />
+                <DetailField label="Phòng ban" value={displayData.ten_phong_ban ?? displayData.id_phong_ban} icon={<Building2 size={12} />} emptyText={emptyText} />
+                <DetailField label="Chức vụ" value={displayData.ten_chuc_vu ?? displayData.id_chuc_vu} icon={<Briefcase size={12} />} emptyText={emptyText} />
+              </DetailFieldGrid>
+            </DetailSection>
+
+            <DetailSection title="Liên hệ" icon={<Phone size={14} />} variant="primary">
+              <DetailFieldGrid cols={3}>
+                <DetailField label="Email" value={displayData.email} icon={<Mail size={12} />} emptyText={emptyText} />
+                <DetailField label="Số điện thoại" value={displayData.so_dien_thoai} icon={<Phone size={12} />} emptyText={emptyText} />
+              </DetailFieldGrid>
+            </DetailSection>
+
+            <DetailSection title="Thông tin hệ thống" icon={<Calendar size={14} />} variant="primary">
+              <DetailFieldGrid cols={3}>
+                <DetailField label="Ngày tạo" value={displayData.tg_tao ? formatDate(displayData.tg_tao) : undefined} icon={<Calendar size={12} />} emptyText={emptyText} />
+                <DetailField label="Cập nhật" value={displayData.tg_cap_nhat ? formatDate(displayData.tg_cap_nhat) : undefined} icon={<Calendar size={12} />} emptyText={emptyText} />
+              </DetailFieldGrid>
+            </DetailSection>
+          </motion.div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {avatarModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => setAvatarModalOpen(false)}
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-card rounded-2xl shadow-xl border border-border w-full max-w-md p-6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-foreground">{txt('page.profile.avatarModalTitle')}</h3>
+                <button
+                  type="button"
+                  onClick={() => setAvatarModalOpen(false)}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                  aria-label={txt('common.close')}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <SingleImageInput
+                value={avatarPreview ?? displayAvatar ?? null}
+                onChange={setAvatarPreview}
+                shape="circle"
+                aspectRatio="1/1"
+                placeholder={txt('page.profile.changeAvatar')}
+                hint={txt('page.profile.avatarModalHint')}
+                maxSizeMB={2}
+              />
+              <div className="flex gap-2 mt-6">
+                <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setAvatarModalOpen(false)}>
+                  {txt('common.cancel')}
+                </Button>
+                <Button className="flex-1 rounded-xl" onClick={handleAvatarSave} isLoading={updateEmployeeMutation.isPending}>
+                  <Save size={16} className="mr-2" /> {txt('common.save')}
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {passwordModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={handleClosePasswordModal}
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-card rounded-2xl shadow-xl border border-border w-full max-w-md p-6"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-foreground">{txt('page.profile.changePasswordTitle')}</h3>
+                <button
+                  type="button"
+                  onClick={handleClosePasswordModal}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                  aria-label={txt('common.close')}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">{txt('page.profile.changePasswordDesc')}</p>
+              <div className="space-y-4">
+                <Input
+                  label={txt('page.profile.newPassword')}
+                  type="password"
+                  placeholder={txt('page.profile.passwordPlaceholder')}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <Input
+                  label={txt('page.profile.confirmPassword')}
+                  type="password"
+                  placeholder={txt('page.profile.passwordPlaceholder')}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+              <div className="flex gap-2 mt-6">
+                <Button variant="outline" className="flex-1 rounded-xl" onClick={handleClosePasswordModal} disabled={isUpdatingPassword}>
+                  {txt('common.cancel')}
+                </Button>
+                <Button className="flex-1 rounded-xl" onClick={handlePasswordSave} isLoading={isUpdatingPassword}>
+                  <Save size={16} className="mr-2" /> {txt('common.save')}
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default Profile;

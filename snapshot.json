@@ -1,0 +1,378 @@
+{
+ "vt_chuyen_xe": [
+  {
+   "id": 37,
+   "ngay": "2026-06-09",
+   "id_tai_xe": 116,
+   "id_xe": 3,
+   "so_chuyen": 1,
+   "tong_tien_luong": 0,
+   "tong_phi": 0,
+   "ghi_chu": "",
+   "trang_thai": "Chưa duyệt",
+   "id_nguoi_tao": null,
+   "tg_tao": "2026-06-09T13:26:03.003+00:00",
+   "tg_cap_nhat": "2026-06-09T13:26:03.714706+00:00"
+  }
+ ],
+ "vt_chuyen_xe_ct": [
+  {
+   "id": 32,
+   "id_chuyen_xe": 37,
+   "id_dia_diem": 49,
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "ghi_chu": null,
+   "trang_thai": "Chưa thực hiện",
+   "phe_duyet": "Chưa duyệt",
+   "tg_tao": "2026-06-09T13:26:03.003+00:00",
+   "tg_cap_nhat": "2026-06-09T13:26:03.003+00:00"
+  },
+  {
+   "id": 33,
+   "id_chuyen_xe": 37,
+   "id_dia_diem": 48,
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "ghi_chu": null,
+   "trang_thai": "Chưa thực hiện",
+   "phe_duyet": "Chưa duyệt",
+   "tg_tao": "2026-06-09T13:26:03.003+00:00",
+   "tg_cap_nhat": "2026-06-09T13:26:03.003+00:00"
+  }
+ ],
+ "vt_luong": [
+  {
+   "id": 139,
+   "nam": 2026,
+   "thang": 6,
+   "id_tai_xe": 126,
+   "tong_luong_chuyen": 0,
+   "tong_chi_phi_chuyen": 0,
+   "tong_chi_phi_khac": 0,
+   "ghi_chu_chi_phi": null,
+   "trang_thai": "Chưa duyệt",
+   "id_nguoi_tao": null,
+   "tg_tao": "2026-06-08T14:44:29.555015+00:00",
+   "tg_cap_nhat": "2026-06-09T04:54:29.27581+00:00",
+   "tru_tien_khac": 0,
+   "tong_con_lai": 0,
+   "ghi_chu_khoan_tru": null
+  },
+  {
+   "id": 147,
+   "nam": 2026,
+   "thang": 6,
+   "id_tai_xe": 116,
+   "tong_luong_chuyen": 0,
+   "tong_chi_phi_chuyen": 0,
+   "tong_chi_phi_khac": 0,
+   "ghi_chu_chi_phi": null,
+   "trang_thai": "Chưa duyệt",
+   "id_nguoi_tao": null,
+   "tg_tao": "2026-06-09T04:27:41.334759+00:00",
+   "tg_cap_nhat": "2026-06-09T14:57:13.119181+00:00",
+   "tru_tien_khac": 0,
+   "tong_con_lai": 0,
+   "ghi_chu_khoan_tru": null
+  }
+ ],
+ "vt_dia_diem": [
+  {
+   "id": 47,
+   "ten": "1 tua",
+   "nhom": "DMI",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 49,
+   "ten": "2 tua",
+   "nhom": "DMI",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 48,
+   "ten": "1.5 tua",
+   "nhom": "DMI",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 13,
+   "ten": "Văn Thánh",
+   "nhom": "Khô",
+   "tien_luong": 170000,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 42,
+   "ten": "Văn Thánh",
+   "nhom": "Khô - ICD",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 44,
+   "ten": "Đồng Văn Cống",
+   "nhom": "Khô - ICD",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 14,
+   "ten": "HTX Tân Bình",
+   "nhom": "Khô - ICD",
+   "tien_luong": 170000,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 43,
+   "ten": "Đỗ Văn Dậy",
+   "nhom": "Khô - ICD",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 46,
+   "ten": "Giao Gò Vấp",
+   "nhom": "Khô - Vệ Tinh",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 45,
+   "ten": "Giao Quận 7",
+   "nhom": "Khô - Vệ Tinh",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 41,
+   "ten": "HTX Tân Bình",
+   "nhom": "Khô - Vệ Tinh",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 10,
+   "ten": "4đ KFM Rau",
+   "nhom": "Rau KingFood",
+   "tien_luong": 320000,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 17,
+   "ten": "CF THOI AN",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 19,
+   "ten": "KDC HIEP THANH",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 22,
+   "ten": "CC HOANG QUAN 4Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 23,
+   "ten": "CC HOANG QUAN 3Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 34,
+   "ten": "CC BCONS G.V",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 26,
+   "ten": "CF CHO LON",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 27,
+   "ten": "CF QUOC LO 50 2Đ (Có Tân Kim)",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 33,
+   "ten": "CF MIZUKI 3Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 28,
+   "ten": "CF QUOC LO 50 3Đ (Có Tân Kim)",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 30,
+   "ten": "CF QUOC LO 50 3Đ (Không có Tân Kim)",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 32,
+   "ten": "MIZUKI 4Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 38,
+   "ten": "CM NHIEU LOC",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 29,
+   "ten": "CF QUOC LO 50 2Đ (không có Tân Kim)",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 24,
+   "ten": "BH NGUYEN VAN TIEN",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 35,
+   "ten": "Xtra Long Binh",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 36,
+   "ten": "Xtra Pham Van Dong",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 37,
+   "ten": "CC DRAGON HILL",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 31,
+   "ten": "CM Phan Van Tri",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 39,
+   "ten": "FOODSTORE HA DO",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 25,
+   "ten": "CF PHU XUAN 4Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 40,
+   "ten": "CF PHU XUAN 3Đ",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 21,
+   "ten": "CF LIEN AP 2-6",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 20,
+   "ten": "CF THANH LOC 17",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 15,
+   "ten": "CF VINH PHU 41",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  },
+  {
+   "id": 16,
+   "ten": "KCN LONG HAU",
+   "nhom": "Tươi sống",
+   "tien_luong": 0,
+   "chi_phi": 0,
+   "trang_thai": "Đang hoạt động"
+  }
+ ]
+}

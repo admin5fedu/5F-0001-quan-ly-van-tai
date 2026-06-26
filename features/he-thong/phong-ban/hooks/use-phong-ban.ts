@@ -1,0 +1,89 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getDepartments, createDepartment, updateDepartment, deleteDepartment, updateDepartmentStatus, importDepartments } from "../services/phong-ban-service";
+import { DepartmentFormValues } from "../core/schema";
+import type { Department } from '../core/types';
+import type { TrangThaiHoatDong } from '@/lib/constants/trang-thai';
+import { toast } from "sonner";
+import { txt } from '../../../../lib/text';
+import { queryKeys } from '@/lib/query-keys';
+import { masterDataQueryOptions } from '@/lib/supabase/query-config';
+import { getErrorMessage } from '@/lib/utils';
+
+const departmentsQueryKey = queryKeys.departments.all;
+const departmentDeleteToastId = 'department-delete';
+
+export const useDepartments = () => {
+  return useQuery({
+    queryKey: departmentsQueryKey,
+    queryFn: getDepartments,
+    ...masterDataQueryOptions,
+  });
+};
+
+export const useCreateDepartment = (onSuccess?: () => void) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createDepartment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: departmentsQueryKey });
+      toast.success(txt('department.toast.createSuccess'));
+      if (onSuccess) onSuccess();
+    },
+    onError: (err: unknown) => toast.error(`Lỗi: ${getErrorMessage(err)}`)
+  });
+};
+
+export const useUpdateDepartment = (onSuccess?: () => void) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string, data: DepartmentFormValues }) => updateDepartment(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: departmentsQueryKey });
+      toast.success(txt('department.toast.updateSuccess'));
+      if (onSuccess) onSuccess();
+    },
+    onError: (err: unknown) => toast.error(`Lỗi: ${getErrorMessage(err)}`)
+  });
+};
+
+export const useUpdateStatusDepartment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: TrangThaiHoatDong }) => updateDepartmentStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: departmentsQueryKey });
+      toast.success(txt('department.toast.updateSuccess'));
+    },
+    onError: (err: unknown) => toast.error(getErrorMessage(err)),
+  });
+};
+
+export const useDeleteDepartment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteDepartment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: departmentsQueryKey });
+      toast.success(txt('department.toast.deleteSuccess'), { id: departmentDeleteToastId });
+    },
+    onError: (err: unknown) => toast.error(getErrorMessage(err), { id: departmentDeleteToastId })
+  });
+};
+
+export const useImportDepartments = (onSuccess?: () => void) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: importDepartments,
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: departmentsQueryKey });
+      if (result.created > 0) {
+        toast.success(txt('department.toast.importSuccess', { count: result.created }));
+      }
+      if (result.errors.length > 0) {
+        toast.warning(result.errors.slice(0, 3).join('; '));
+      }
+      if (onSuccess) onSuccess();
+    },
+    onError: (err: unknown) => toast.error(getErrorMessage(err)),
+  });
+};
