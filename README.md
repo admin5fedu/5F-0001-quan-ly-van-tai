@@ -56,6 +56,31 @@ Tài khoản test khác (cùng mật khẩu `5fedu.com`): `xuyen`, `linh` (tài 
 
 Để nối Supabase thật: đổi `VITE_DATA_SOURCE=supabase` và điền `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
 
+## Deploy lên Vercel (mock demo)
+
+Trên Vercel, file `.env` local **không** được đẩy lên git. Nếu không set biến môi trường, app build với `VITE_DATA_SOURCE=supabase` (mặc định trong code) → form đăng nhập **không** điền sẵn `admin` / `5fedu.com`.
+
+### Cách 1: Vercel Dashboard (thủ công)
+
+1. **Vercel Dashboard** → Project → **Settings** → **Environment Variables**
+2. Thêm hoặc sửa: `VITE_DATA_SOURCE` = `mock` (scope **Production** và **Preview**)
+3. Không cần Supabase URL/key khi chỉ chạy mock
+4. **Deployments** → chọn deployment mới nhất → **Redeploy** (bắt buộc — Vite nhúng env lúc build)
+
+### Cách 2: Vercel CLI (script)
+
+```bash
+npx vercel login    # một lần
+npx vercel link     # một lần, chọn đúng project
+./scripts/setup-vercel-mock-demo.sh
+```
+
+Windows (PowerShell): `.\scripts\setup-vercel-mock-demo.ps1`
+
+Sau redeploy, đăng nhập với `admin` / `5fedu.com` (điền sẵn trên form).
+
+Khi nối Supabase thật trên Vercel: đổi `VITE_DATA_SOURCE=supabase`, thêm `VITE_SUPABASE_URL` và `VITE_SUPABASE_ANON_KEY`, rồi redeploy. Có thể dùng `scripts/add-vercel-envs.ps1` (đọc từ `.env.local`).
+
 ## Scripts
 
 | Lệnh | Mô tả |
